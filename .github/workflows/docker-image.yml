@@ -1,54 +1,25 @@
-name: Build, Test and Push Docker Image
-
+name: Build and Push Docker Images
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
   build-and-push:
-    needs: test
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
+      - name: Checkout code 
+        uses: actions/checkout@v3 
+      - name: Login to Docker Hub 
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Trigger Test
-        run: echo "Triggered Github actions"
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
+          username: ${{secrets.DOCKERHUB_USERNAME}} 
+          password: ${{secrets.DOCKERHUB_PASSWORD}} 
+      - name: Set up Docker Buildx 
+        uses: docker/setup-buildx-action@v3 
+      - name: Build and Push Docker Image 
+        uses: docker/build-push-action@v5 
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: paramesh/ust-retail-app:v1.1.0
+          context: . 
+          file: ./Dockerfile 
+          push: true 
+          tags: muralisocial123/ust-retail-app:v1.1.0
